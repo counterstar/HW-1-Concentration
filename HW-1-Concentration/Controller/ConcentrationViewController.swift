@@ -65,8 +65,6 @@ class ConcentrationViewController: UIViewController {
             self.flipCountLabel.textColor = currentTheme.cardBackColor
         }
     }
-
-        //emojiThemes[emojiThemes.count.arc4random()]
     
     private var emoji = [Card:String]()
     
