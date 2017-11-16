@@ -20,7 +20,6 @@ class ConcentrationViewController: UIViewController {
     @IBOutlet private weak var topLabel: UILabel!
     
     @IBAction private func touchCard(_ sender: UIButton) {
-//        game.numberOfFlips += 1
         if let cardNumber = cardButtons.index(of: sender) {
             game.chooseCard(at: cardNumber)
             updateViewFromModel()
@@ -28,9 +27,9 @@ class ConcentrationViewController: UIViewController {
     }
     
     @IBAction func startNewGame(_ sender: UIButton) {
-        //new game resets .game variable, and replaces emojiChoises with a new random one from Themes
+        //new game resets .game variable, and replaces emojiThemes with a new random one from Themes
         game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
-        emojiChoices = emojiThemes[randomEmojiTheme()]! //can safely unwrap optional, randomEmojiTheme guarantees to return proper String key
+        setupRandomEmojiTheme()
         updateViewFromModel()
     }
     
@@ -44,22 +43,40 @@ class ConcentrationViewController: UIViewController {
 
     private lazy var game: Concentration = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
     
-    private var emojiThemes: [String: [String]] = [
-        "Fruits": ["🍏", "🍊", "🍍", "🥥", "🍉", "🍇", "🍒", "🍌", "🥝", "🍆"],
-        "Faces" : ["😀", "😎", "😡", "😰", "😍", "🤣", "😬", "😈", "😳", "😜"],
-        "Activity": ["⚽️", "🏄‍♂️", "🏑", "🏓", "🚴‍♂️", "🧘‍♀️", "🥋", "🎸", "🎯", "🎮"],
-        "Animals": ["🐶", "🐱", "🐭", "🦊", "🦋", "🐢", "🐸", "🐵", "🐞", "🐠"],
-        "Inventory": ["⌚️", "💾", "📡", "📞", "🎥", "⚒", "🔦", "📷", "📱", "💻"],
-        "Clothes": ["👚", "👕", "👖", "👔", "👗", "👓", "👠", "🎩", "🧣", "🧤"]
+    typealias emojiTheme = (name: String, emojis: [String], backgroundColor: UIColor, cardBackColor: UIColor)
+    
+    private var emojiThemes: [emojiTheme] = [
+        ("Fruits", ["🍏", "🍊", "🍍", "🥥", "🍉", "🍇", "🍒", "🍌", "🥝", "🍆"], #colorLiteral(red: 0.5058823824, green: 0.3372549117, blue: 0.06666667014, alpha: 1), #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)),
+        ("Faces", ["😀", "😎", "😡", "😰", "😍", "🤣", "😬", "😈", "😳", "😜"], #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)),
+        ("Activity", ["⚽️", "🏄‍♂️", "🏑", "🏓", "🚴‍♂️", "🧘‍♀️", "🥋", "🎸", "🎯", "🎮"], #colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1), #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)),
+        ("Animals", ["🐶", "🐱", "🐭", "🦊", "🦋", "🐢", "🐸", "🐵", "🐞", "🐠"], #colorLiteral(red: 0.5058823824, green: 0.3372549117, blue: 0.06666667014, alpha: 1), #colorLiteral(red: 1, green: 0.8323456645, blue: 0.4732058644, alpha: 1)),
+        ("Inventory", ["⌚️", "💾", "📡", "📞", "🎥", "⚒", "🔦", "📷", "📱", "💻"], #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)),
+        ("Clothes", ["👚", "👕", "👖", "👔", "👗", "👓", "👠", "🎩", "🧣", "🧤"], #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1))
     ]
     
-    private lazy var emojiChoices: [String] = emojiThemes[self.randomEmojiTheme()]! //can safely unwrap optional, randomEmojiTheme guarantees to return proper String key
-    //this array  is used to fill emoji var down below with emojis from randomly choosen theme
+    private var currentTheme: emojiTheme = ("", [], UIColor.black, UIColor.black)
+        //initialazing starting theme for convinience purposes. It is never used.
+    {
+        didSet {
+            self.topLabel.text = "Current theme: \(currentTheme.name)"
+            self.view.backgroundColor = currentTheme.backgroundColor
+            self.topLabel.textColor = currentTheme.cardBackColor
+            self.scoreLabel.textColor = currentTheme.cardBackColor
+            self.flipCountLabel.textColor = currentTheme.cardBackColor
+        }
+    }
+
+        //emojiThemes[emojiThemes.count.arc4random()]
     
     private var emoji = [Card:String]()
     
-    
     //MARK: funcs
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupRandomEmojiTheme()
+        updateViewFromModel()
+    }
     
     private func updateViewFromModel() {
         for index in cardButtons.indices {
@@ -70,7 +87,7 @@ class ConcentrationViewController: UIViewController {
                 button.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             } else {
                 button.setTitle("", for: UIControlState.normal)
-                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : #colorLiteral(red: 1, green: 0.7034695745, blue: 0.117319949, alpha: 1)
+                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : currentTheme.cardBackColor
             }
         }
         flipCountLabel.text = "Flips: \(game.numberOfFlips)" //updating flipCountLabel as a part of syncing with model
@@ -78,18 +95,15 @@ class ConcentrationViewController: UIViewController {
     }
     
     private func emoji(for card: Card) -> String {
-        if emoji[card] == nil, emojiChoices.count > 0 {
-            emoji[card] = emojiChoices.remove(at: emojiChoices.count.arc4random())
+        if emoji[card] == nil, currentTheme.emojis.count > 0 {
+            emoji[card] = currentTheme.emojis.remove(at: currentTheme.emojis.count.arc4random())
         }
         return emoji[card] ?? "?"
     }
     
-    //helper function to get random emoji theme and display its name as the topLabel text
-    private func randomEmojiTheme() -> String {
-        let emojiThemeKeys = Array(emojiThemes.keys)
-        let randomEmojiTheme = emojiThemeKeys[emojiThemeKeys.count.arc4random()]
-        self.topLabel.text = "Current theme: \(randomEmojiTheme)"
-        return randomEmojiTheme
+    //helper function to get random emoji theme
+    private func setupRandomEmojiTheme() {
+        self.currentTheme = emojiThemes[emojiThemes.count.arc4random()]
     }
 }
 
