@@ -43,19 +43,31 @@ class ConcentrationViewController: UIViewController {
 
     private lazy var game: Concentration = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
     
-    typealias emojiTheme = (name: String, emojis: [String], backgroundColor: UIColor, cardBackColor: UIColor)
+//    typealias emojiTheme = (name: String, emojis: [String], backgroundColor: UIColor, cardBackColor: UIColor)
+    
+    struct emojiTheme {
+        var name = String()
+        var emojis = [String]()
+        var backgroundColor = UIColor()
+        var cardBackColor = UIColor()
+    }
     
     private var emojiThemes: [emojiTheme] = [
-        ("Fruits", ["🍏", "🍊", "🍍", "🥥", "🍉", "🍇", "🍒", "🍌", "🥝", "🍆"], #colorLiteral(red: 0.5058823824, green: 0.3372549117, blue: 0.06666667014, alpha: 1), #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)),
-        ("Faces", ["😀", "😎", "😡", "😰", "😍", "🤣", "😬", "😈", "😳", "😜"], #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)),
-        ("Activity", ["⚽️", "🏄‍♂️", "🏑", "🏓", "🚴‍♂️", "🧘‍♀️", "🥋", "🎸", "🎯", "🎮"], #colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1), #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)),
-        ("Animals", ["🐶", "🐱", "🐭", "🦊", "🦋", "🐢", "🐸", "🐵", "🐞", "🐠"], #colorLiteral(red: 0.5058823824, green: 0.3372549117, blue: 0.06666667014, alpha: 1), #colorLiteral(red: 1, green: 0.8323456645, blue: 0.4732058644, alpha: 1)),
-        ("Inventory", ["⌚️", "💾", "📡", "📞", "🎥", "⚒", "🔦", "📷", "📱", "💻"], #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)),
-        ("Clothes", ["👚", "👕", "👖", "👔", "👗", "👓", "👠", "🎩", "🧣", "🧤"], #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1))
+        emojiTheme(name: "Fruits", emojis: ["🍏", "🍊", "🍍", "🍋", "🍉", "🍇", "🍒", "🍌", "🥝", "🍆"], backgroundColor: #colorLiteral(red: 0.5058823824, green: 0.3372549117, blue: 0.06666667014, alpha: 1), cardBackColor: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)),
+        emojiTheme(name: "Faces", emojis: ["😀", "😎", "😡", "😰", "😍", "🤣", "😬", "😈", "😳", "😜"], backgroundColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), cardBackColor: #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)),
+        emojiTheme(name: "Activity", emojis: ["⚽️", "🏄‍♂️", "🏑", "🏓", "🚴‍♂️", "⛸", "🥋", "🎸", "🎯", "🎮"], backgroundColor: #colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1), cardBackColor: #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)),
+        emojiTheme(name: "Animals", emojis: ["🐶", "🐱", "🐭", "🦊", "🦋", "🐢", "🐸", "🐵", "🐞", "🐠"], backgroundColor: #colorLiteral(red: 0.5058823824, green: 0.3372549117, blue: 0.06666667014, alpha: 1), cardBackColor: #colorLiteral(red: 1, green: 0.8323456645, blue: 0.4732058644, alpha: 1)),
+        emojiTheme(name: "Inventory", emojis: ["⌚️", "💾", "📡", "📞", "🎥", "⚒", "🔦", "📷", "📱", "💻"], backgroundColor: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), cardBackColor: #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)),
+        emojiTheme(name: "Clothes", emojis: ["👚", "👕", "👖", "👔", "👗", "👓", "👠", "🎩", "👞", "👟"], backgroundColor: #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), cardBackColor: #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1))
     ]
+//        ("Fruits", ["🍏", "🍊", "🍍", "🥥", "🍉", "🍇", "🍒", "🍌", "🥝", "🍆"], #colorLiteral(red: 0.5058823824, green: 0.3372549117, blue: 0.06666667014, alpha: 1), #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)),
+//        ("Faces", ["😀", "😎", "😡", "😰", "😍", "🤣", "😬", "😈", "😳", "😜"], #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)),
+//        ("Activity", ["⚽️", "🏄‍♂️", "🏑", "🏓", "🚴‍♂️", "🧘‍♀️", "🥋", "🎸", "🎯", "🎮"], #colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1), #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)),
+//        ("Animals", ["🐶", "🐱", "🐭", "🦊", "🦋", "🐢", "🐸", "🐵", "🐞", "🐠"], #colorLiteral(red: 0.5058823824, green: 0.3372549117, blue: 0.06666667014, alpha: 1), #colorLiteral(red: 1, green: 0.8323456645, blue: 0.4732058644, alpha: 1)),
+//        ("Inventory", ["⌚️", "💾", "📡", "📞", "🎥", "⚒", "🔦", "📷", "📱", "💻"], #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)),
+//        ("Clothes", ["👚", "👕", "👖", "👔", "👗", "👓", "👠", "🎩", "🧣", "🧤"], #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1))
     
-    private var currentTheme: emojiTheme = ("", [], UIColor.black, UIColor.black)
-        //initialazing starting theme for convinience purposes. It is never used.
+    private var currentTheme = emojiTheme()
     {
         didSet {
             self.topLabel.text = "Current theme: \(currentTheme.name)"

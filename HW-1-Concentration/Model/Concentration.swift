@@ -88,14 +88,27 @@ extension Collection {
     }
 }
 
+
+//extension Array {
+//    mutating func shuffle() {
+//        var shuffledArray: [Element] = []
+//        while self.count > 0 {
+//            shuffledArray += [self.remove(at: self.count.arc4random())]
+//        }
+//        self = shuffledArray
+//    }
+//}
+
 // moved .shuffle method to an extension of array (probably belongs here)
 // uses Int.arc4random() func declared elsewhere
 extension Array {
-    mutating func shuffle() {
-        var shuffledArray: [Element] = []
-        while self.count > 0 {
-            shuffledArray += [self.remove(at: self.count.arc4random())]
+    public mutating func shuffle() {
+        for i in stride(from: count - 1, through: 1, by: -1) {
+            let j = (i + 1).arc4random()
+            if i != j {
+                self.swapAt(i, j)
+            }
         }
-        self = shuffledArray
+        print(self)
     }
 }
